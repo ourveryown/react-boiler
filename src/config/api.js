@@ -7,7 +7,7 @@ import { setContext } from "apollo-link-context";
 import { createHttpLink } from "apollo-link-http";
 
 // Apollo Link State
-import DefaultState from "config/defaultState";
+import Defaults from "config/defaults";
 import Resolvers from "config/resolvers";
 
 // constants
@@ -15,13 +15,12 @@ import { AUTH_TOKEN } from "constants/storageTokens";
 
 // Apollo Link Set Up
 const uri = "http://localhost:4000/";
-// const uri = "http://classsolverapi-staging.westus.azurecontainer.io/api"
 
 const cache = new InMemoryCache();
 
 const stateLink = withClientState({
   cache,
-  defaults: DefaultState,
+  defaults: Defaults,
   resolvers: Resolvers
 });
 
