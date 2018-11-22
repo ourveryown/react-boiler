@@ -1,1 +1,1 @@
-export { Login } from "domains/auth/pages";
+export { Login } from 'domains/auth/pages'

@@ -1,3 +1,3 @@
-import auth from "domains/auth/graphql/resolvers";
+import auth from 'domains/auth/graphql/resolvers'
 
-export default { Mutation: { ...auth } };
+export default { Mutation: { ...auth } }

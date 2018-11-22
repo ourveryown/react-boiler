@@ -1,59 +1,58 @@
-import React, { Component } from "react";
-import { compose, graphql } from "react-apollo";
+import React, { Component } from 'react'
+import { compose, graphql } from 'react-apollo'
 
-import { LOGIN, UPDATE_AUTH } from "domains/auth/graphql/mutations";
-import { AUTH_CLIENT } from "domains/auth/graphql/queries";
+import { LOGIN, UPDATE_AUTH } from 'domains/auth/graphql/mutations'
+import { AUTH_CLIENT } from 'domains/auth/graphql/queries'
 
 class Login extends Component {
   state = {
-    email: "",
-    password: ""
-  };
+    email: '',
+    password: ''
+  }
 
   onChange = e => {
     this.setState({
       [e.target.name]: e.target.value
-    });
-  };
+    })
+  }
 
   login = () => {
-    const { loginMutation } = this.props;
-    const { email, password } = this.state;
+    const { loginMutation } = this.props
+    const { email, password } = this.state
 
     const variables = {
       email,
       password
-    };
+    }
 
     this.setState({
       loading: true
-    });
+    })
     loginMutation({ variables })
       .then(data => {
         this.setState({
           loading: false
-        });
+        })
       })
       .catch(() => {
         this.setState({
           loading: false
-        });
-      });
-  };
+        })
+      })
+  }
 
-  render() {
-    const { auth } = this.props;
-    const { email, password } = this.state;
+  render () {
+    const { email, password } = this.state
 
     return (
       <div>
-        <input type="text" onChange={this.onChange} value={email} name="email" />
-        <input type="text" onChange={this.onChange} value={password} name="password" />
-        <div className="btn btn-primary" onClick={this.login}>
+        <input type='text' onChange={this.onChange} value={email} name='email' />
+        <input type='text' onChange={this.onChange} value={password} name='password' />
+        <div className='btn btn-primary' onClick={this.login}>
           Log In!
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -63,6 +62,6 @@ export default compose(
       auth
     })
   }),
-  graphql(UPDATE_AUTH, { name: "updateAuth" }),
-  graphql(LOGIN, { name: "loginMutation" })
-)(Login);
+  graphql(UPDATE_AUTH, { name: 'updateAuth' }),
+  graphql(LOGIN, { name: 'loginMutation' })
+)(Login)

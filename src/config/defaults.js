@@ -1,3 +1,3 @@
-import auth from "domains/auth/graphql/defaults";
+import auth from 'domains/auth/graphql/defaults'
 
-export default { auth };
+export default { auth }

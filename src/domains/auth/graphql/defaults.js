@@ -1,7 +1,7 @@
 export default {
-  __typename: "auth",
+  __typename: 'auth',
   user: {
-    __typename: "user",
-    token: ""
+    __typename: 'user',
+    token: ''
   }
-};
+}
