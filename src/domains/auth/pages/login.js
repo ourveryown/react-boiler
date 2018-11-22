@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { compose, graphql } from 'react-apollo'
 
 import { LOGIN, UPDATE_AUTH } from 'domains/auth/graphql/mutations'
-import { AUTH_CLIENT } from 'domains/auth/graphql/queries'
 
 class Login extends Component {
   state = {
@@ -57,11 +56,6 @@ class Login extends Component {
 }
 
 export default compose(
-  graphql(AUTH_CLIENT, {
-    props: ({ data: { auth } }) => ({
-      auth
-    })
-  }),
   graphql(UPDATE_AUTH, { name: 'updateAuth' }),
   graphql(LOGIN, { name: 'loginMutation' })
 )(Login)

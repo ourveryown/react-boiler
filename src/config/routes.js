@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
+import { compose, graphql } from 'react-apollo'
 
+import { AUTH_CLIENT } from 'domains/auth/graphql/queries'
 // import { Nav } from "domains/app/components";
 
 import { Login } from './pages'
 
 const noLoginRoutes = [{ path: '', component: Login }]
+const loggedInRoutes = [{ path: '', component: Login }]
 
-export default class Routes extends Component {
+class Routes extends Component {
   render () {
-    const routes = noLoginRoutes
+    const { auth } = this.props
+    const routes = auth.user.token ? loggedInRoutes : noLoginRoutes
 
     return (
       <BrowserRouter>
@@ -23,3 +27,11 @@ export default class Routes extends Component {
     )
   }
 }
+
+export default compose(
+  graphql(AUTH_CLIENT, {
+    props: ({ data: { auth } }) => ({
+      auth
+    })
+  })
+)(Routes)
