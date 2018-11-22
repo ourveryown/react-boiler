@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { compose, graphql } from 'react-apollo'
 
+import { TOKEN } from 'domains/auth/graphql/resolverTypes'
 import { LOGIN, UPDATE_AUTH } from 'domains/auth/graphql/mutations'
 
 class Login extends Component {
@@ -16,7 +17,7 @@ class Login extends Component {
   }
 
   login = () => {
-    const { loginMutation } = this.props
+    const { loginMutation, updateAuth } = this.props
     const { email, password } = this.state
 
     const variables = {
@@ -29,6 +30,7 @@ class Login extends Component {
     })
     loginMutation({ variables })
       .then(data => {
+        updateAuth({ variables: { type: TOKEN, data: data.data.login.token } })
         this.setState({
           loading: false
         })

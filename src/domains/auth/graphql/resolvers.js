@@ -11,13 +11,14 @@ export default {
     let newData = {
       auth: previous.auth
     }
+
     switch (type) {
-      case types.LOGIN: {
+      case types.TOKEN: {
         newData = {
           auth: {
             ...newData.auth,
             user: {
-              ...newData.user,
+              ...newData.auth.user,
               token: data
             }
           }
