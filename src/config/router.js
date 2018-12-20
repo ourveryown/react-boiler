@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
-import { compose, graphql } from 'react-apollo'
+import { connect } from 'react-redux'
 
-import { AUTH_CLIENT } from 'domains/auth/graphql/queries'
 // import { Nav } from "domains/app/components";
 
-import { Login } from './pages'
+import { NO_LOGIN, LOGGED_IN } from 'domains/app/routes'
 
-const noLoginRoutes = [{ path: '', component: Login }]
-const loggedInRoutes = [{ path: '', component: Login }]
+const mapStateToProps = state => ({
+  user: state.auth.user
+})
 
 class Routes extends Component {
   render () {
-    const { auth } = this.props
-    const routes = auth.user.token ? loggedInRoutes : noLoginRoutes
+    const { user } = this.props
+
+    const routes = user.token ? LOGGED_IN : NO_LOGIN
 
     return (
       <BrowserRouter>
@@ -28,10 +29,4 @@ class Routes extends Component {
   }
 }
 
-export default compose(
-  graphql(AUTH_CLIENT, {
-    props: ({ data: { auth } }) => ({
-      auth
-    })
-  })
-)(Routes)
+export default connect(mapStateToProps)(Routes)

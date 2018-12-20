@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import { compose, graphql } from 'react-apollo'
+import { LOGIN } from 'domains/auth/graphql'
 
-import { TOKEN } from 'domains/auth/graphql/resolverTypes'
-import { LOGIN, UPDATE_AUTH } from 'domains/auth/graphql/mutations'
+import { connect } from 'react-redux'
+import { loginAction } from 'domains/auth/redux/actions'
+
+import { Loader } from 'components'
+
+const mapDispatchToProps = dispatch => ({
+  loginAction: user => dispatch(loginAction(user))
+})
 
 class Login extends Component {
   state = {
@@ -17,7 +24,7 @@ class Login extends Component {
   }
 
   login = () => {
-    const { loginMutation, updateAuth } = this.props
+    const { loginMutation, loginAction } = this.props
     const { email, password } = this.state
 
     const variables = {
@@ -29,11 +36,11 @@ class Login extends Component {
       loading: true
     })
     loginMutation({ variables })
-      .then(data => {
-        updateAuth({ variables: { type: TOKEN, data: data.data.login.token } })
+      .then(res => {
         this.setState({
           loading: false
         })
+        loginAction(res.data.login)
       })
       .catch(() => {
         this.setState({
@@ -43,7 +50,9 @@ class Login extends Component {
   }
 
   render () {
-    const { email, password } = this.state
+    const { loading, email, password } = this.state
+
+    if (loading) return <Loader />
 
     return (
       <div>
@@ -57,7 +66,7 @@ class Login extends Component {
   }
 }
 
-export default compose(
-  graphql(UPDATE_AUTH, { name: 'updateAuth' }),
-  graphql(LOGIN, { name: 'loginMutation' })
-)(Login)
+export default connect(
+  null,
+  mapDispatchToProps
+)(compose(graphql(LOGIN, { name: 'loginMutation' }))(Login))

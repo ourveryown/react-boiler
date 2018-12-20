@@ -1,14 +1,9 @@
 // Apollo GQL Related imports
-import { withClientState } from 'apollo-link-state'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import { createHttpLink } from 'apollo-link-http'
-
-// Apollo Link State
-import Defaults from 'config/defaults'
-import Resolvers from 'config/resolvers'
 
 // constants
 import { AUTH_TOKEN } from 'constants/storageTokens'
@@ -17,12 +12,6 @@ import { AUTH_TOKEN } from 'constants/storageTokens'
 const uri = 'http://localhost:4000/'
 
 const cache = new InMemoryCache()
-
-const stateLink = withClientState({
-  cache,
-  defaults: Defaults,
-  resolvers: Resolvers
-})
 
 const authLink = setContext((_, { headers }) => {
   // get items from local storage
@@ -43,11 +32,8 @@ const httpLink = createHttpLink({
 })
 
 const client = new ApolloClient({
-  link: ApolloLink.from([stateLink, authLink.concat(httpLink)]),
-  cache
+  cache,
+  link: ApolloLink.from([authLink.concat(httpLink)])
 })
-
-// Restores the defaultState when the store is reset
-client.onResetStore(stateLink.writeDefaults)
 
 export default client
