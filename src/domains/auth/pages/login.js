@@ -3,54 +3,52 @@ import { compose, graphql } from 'react-apollo'
 import { LOGIN } from 'domains/auth/graphql'
 
 import { connect } from 'react-redux'
-import { loginAction } from 'domains/auth/redux/actions'
+import { loginAction, loadingAction, loginInputChanged } from 'domains/auth/actions'
 
 import { Loader } from 'components'
 
+import { AUTH_TOKEN } from 'constants/storageTokens'
+
+const mapStateToProps = state => ({
+  loading: state.auth.loading,
+  email: state.auth.data.email,
+  password: state.auth.data.password
+})
+
 const mapDispatchToProps = dispatch => ({
-  loginAction: user => dispatch(loginAction(user))
+  loginAction: user => dispatch(loginAction(user)),
+  loadingAction: loading => dispatch(loadingAction(loading)),
+  loginInputChanged: (name, value) => dispatch(loginInputChanged(name, value))
 })
 
 class Login extends Component {
-  state = {
-    email: '',
-    password: ''
-  }
-
   onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+    this.props.loginInputChanged(e.target.name, e.target.value)
   }
 
   login = () => {
-    const { loginMutation, loginAction } = this.props
-    const { email, password } = this.state
+    const { loginMutation, loginAction, loadingAction, email, password } = this.props
 
     const variables = {
       email,
       password
     }
 
-    this.setState({
-      loading: true
-    })
+    loadingAction(true)
+
     loginMutation({ variables })
       .then(res => {
-        this.setState({
-          loading: false
-        })
+        loadingAction(false)
         loginAction(res.data.login)
+        localStorage.setItem(AUTH_TOKEN, res.data.login.token)
       })
       .catch(() => {
-        this.setState({
-          loading: false
-        })
+        loadingAction(false)
       })
   }
 
   render () {
-    const { loading, email, password } = this.state
+    const { loading, email, password } = this.props
 
     if (loading) return <Loader />
 
@@ -67,6 +65,6 @@ class Login extends Component {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(compose(graphql(LOGIN, { name: 'loginMutation' }))(Login))

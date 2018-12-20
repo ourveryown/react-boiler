@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import rootReducer from 'domains/app/root-reducer'
+import rootReducer from 'config/root-reducer'
 
 const logger = store => next => action => {
   console.log('dispatching', action)
