@@ -19,5 +19,15 @@ const crashReporter = store => next => action => {
 }
 
 export default function configureStore (initialState = {}) {
-  return createStore(rootReducer, applyMiddleware(logger, crashReporter, thunk))
+  const store = createStore(rootReducer, initialState, applyMiddleware(logger, crashReporter, thunk))
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (module.hot) {
+      module.hot.accept('config/root-reducer', () => {
+        store.replaceReducer(rootReducer)
+      })
+    }
+  }
+
+  return store
 }

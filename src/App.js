@@ -1,26 +1,30 @@
 import React, { Component } from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-// API
-import { ApolloProvider } from 'react-apollo'
-import Client from 'config/api'
+// import { Nav } from "domains/app/components";
 
-// REDUX
-import { Provider } from 'react-redux'
-import createStore from 'config/store'
+import { NO_LOGIN, LOGGED_IN } from 'domains/app/routes'
 
-// WEB APP
-import Routes from 'config/router'
+const mapStateToProps = state => ({
+  user: state.auth.user
+})
 
 class App extends Component {
   render () {
+    const { user } = this.props
+
+    const routes = user.token ? LOGGED_IN : NO_LOGIN
+
     return (
-      <ApolloProvider client={Client}>
-        <Provider store={createStore()}>
-          <Routes />
-        </Provider>
-      </ApolloProvider>
+      <Switch>
+        {routes.map((route, index) => (
+          <Route key={index} exact path={`/${route.path}`} component={route.component} />
+        ))}
+        <Redirect to='/' />
+      </Switch>
     )
   }
 }
 
-export default App
+export default connect(mapStateToProps)(App)

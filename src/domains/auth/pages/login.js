@@ -9,18 +9,6 @@ import { Loader } from 'components'
 
 import { AUTH_TOKEN } from 'constants/storageTokens'
 
-const mapStateToProps = state => ({
-  loading: state.auth.loading,
-  email: state.auth.data.email,
-  password: state.auth.data.password
-})
-
-const mapDispatchToProps = dispatch => ({
-  loginAction: user => dispatch(loginAction(user)),
-  loadingAction: loading => dispatch(loadingAction(loading)),
-  loginInputChanged: (name, value) => dispatch(loginInputChanged(name, value))
-})
-
 class Login extends Component {
   onChange = e => {
     this.props.loginInputChanged(e.target.name, e.target.value)
@@ -63,6 +51,18 @@ class Login extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  loading: state.auth.loading,
+  email: state.auth.data.email,
+  password: state.auth.data.password
+})
+
+const mapDispatchToProps = dispatch => ({
+  loginAction: user => dispatch(loginAction(user)),
+  loadingAction: loading => dispatch(loadingAction(loading)),
+  loginInputChanged: (name, value) => dispatch(loginInputChanged(name, value))
+})
 
 export default connect(
   mapStateToProps,
