@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
 import { compose, graphql } from 'react-apollo'
 import { LOGIN } from 'domains/auth/graphql'
 
 import { connect } from 'react-redux'
-import { loginAction, loadingAction, loginInputChanged } from 'domains/auth/actions'
+import { loginAction, loadingAction, loginInputChanged } from 'domains/auth/redux/actions'
 
 import { Loader } from 'components'
 
@@ -36,7 +37,7 @@ class Login extends Component {
   }
 
   render () {
-    const { loading, email, password } = this.props
+    const { t, loading, email, password } = this.props
 
     if (loading) return <Loader />
 
@@ -45,7 +46,7 @@ class Login extends Component {
         <input type='text' onChange={this.onChange} value={email} name='email' />
         <input type='text' onChange={this.onChange} value={password} name='password' />
         <div className='btn btn-primary' onClick={this.login}>
-          Log In!
+          {t('login')}
         </div>
       </div>
     )
@@ -67,4 +68,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(compose(graphql(LOGIN, { name: 'loginMutation' }))(Login))
+)(compose(graphql(LOGIN, { name: 'loginMutation' }))(withNamespaces()(Login)))

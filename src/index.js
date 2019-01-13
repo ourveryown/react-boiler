@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom'
 import 'domains/app/styles/app.scss'
 import * as serviceWorker from './serviceWorker'
 
+// i18n
+import { I18nextProvider } from 'react-i18next'
+import i18n from './config/i18n'
+
 // API
 import { ApolloProvider } from 'react-apollo'
 import Client from 'config/api'
@@ -21,9 +25,11 @@ const render = Component => {
   return ReactDOM.render(
     <ApolloProvider client={Client}>
       <Provider store={store}>
-        <BrowserRouter>
-          <Component />
-        </BrowserRouter>
+        <I18nextProvider i18n={i18n}>
+          <BrowserRouter>
+            <Component />
+          </BrowserRouter>
+        </I18nextProvider>
       </Provider>
     </ApolloProvider>,
     document.getElementById('root')
